@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>轮毂检测线————数字孪生</title>
+    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="css/map.css">
+</head>
+
+<body>
+    <div class="data">
+        <div class="data-title">
+            <!-- 左侧按钮 -->
+            <div class="button-container ">
+                <button class="btn" onclick="window.location.href='Home_Page.html'">主页</button>
+                <button class="btn" onclick="window.location.href='page2.html'">可视化平台</button>
+            
+            </div>
+            
+            <!-- 其他内容 -->
+            <div class="title-left fl"></div>
+            <div class="title-center fl" style="margin-top: -1.1%;"></div>
+            
+            <!-- 右侧按钮 -->
+            <div class="button-container-right fr">
+                <button class="btnr" onclick="window.location.href='Monitor.html'">实时监控</button>
+                <button class="btnr" onclick="window.location.href='Digital_Twin.html'">数字孪生</button>
+            </div>
+        
+            <div class="title-right fr"></div>
+        </div>
+        <div class="data-content">
+            <div class="con-left fl">
+                <div class="left-top">
+                    <div class="info">
+                        <div class="info-title">实时数据</div>
+                        <img src="img/bj-1.png" alt="" class="bj-1">
+                        <img src="img/bj-2.png" alt="" class="bj-2">
+                        <img src="img/bj-3.png" alt="" class="bj-3">
+                        <img src="img/bj-4.png" alt="" class="bj-4">
+                        <div class="info-main">
+                            <div class="info-1">
+                                <div class="info-img fl">
+                                    <img src="img/info-img-1.png" alt="">
+                                </div>
+                                <div class="info-text fl">
+                                    <p>车辆总数(辆)</p>
+                                    <p>12,457</p>
+                                </div>
+                            </div>
+                            <div class="info-2">
+                                <div class="info-img fl">
+                                    <img src="img/info-img-2.png" alt="">
+                                </div>
+                                <div class="info-text fl">
+                                    <p>当前在线数(辆)</p>
+                                    <p>12,457</p>
+                                </div>
+                            </div>
+                            <div class="info-3">
+                                <div class="info-img fl">
+                                    <img src="img/info-img-3.png" alt="">
+                                </div>
+                                <div class="info-text fl">
+                                    <p>今日活跃数(辆)</p>
+                                    <p>12,457</p>
+                                </div>
+                            </div>
+                            <div class="info-4">
+                                <div class="info-img fl">
+                                    <img src="img/info-img-4.png" alt="">
+                                </div>
+                                <div class="info-text fl">
+                                    <p>今日活跃率(%)</p>
+                                    <p>83</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-bottom">
+                        <div class="title">尺寸分类</div>
+                        <img src="img/bj-1.png" alt="" class="bj-1">
+                        <img src="img/bj-2.png" alt="" class="bj-2">
+                        <img src="img/bj-3.png" alt="" class="bj-3">
+                        <img src="img/bj-4.png" alt="" class="bj-4">
+                        <div id="echarts_1" class="charts"></div>
+                    </div>
+                </div>
+                <div class="left-bottom">
+                    <div class="title">型号分类</div>
+                    <img src="img/bj-1.png" alt="" class="bj-1">
+                    <img src="img/bj-2.png" alt="" class="bj-2">
+                    <img src="img/bj-3.png" alt="" class="bj-3">
+                    <img src="img/bj-4.png" alt="" class="bj-4">
+                    <div id="echarts_2" class="charts"></div>
+                </div>
+            </div>
+            <div class="con-center fl">
+                <div class="map-num" , id="map-num">
+                    <p>设备模型</p>
+                </div>
+                <div class="cen-top" id="STL">
+                    <img src="img/bj-1.png" alt="" class="bj-1">
+                    <img src="img/bj-2.png" alt="" class="bj-2">
+                    <img src="img/bj-3.png" alt="" class="bj-3">
+                    <img src="img/bj-4.png" alt="" class="bj-4">
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/echarts.min.js"></script>
+<script src="js/china.js"></script>
+<script src="js/echarts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var container = document.getElementById('STL');
+        var scene = new THREE.Scene();
+        var camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 2000);
+        var renderer = new THREE.WebGLRenderer({ alpha: true }); // 设置背景透明
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+        
+        var controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.1;
+        controls.screenSpacePanning = false;
+        controls.maxPolarAngle = Math.PI;
+
+        // 添加环境光
+        var ambientLight = new THREE.AmbientLight('rgb(255, 255, 255)', 0.9);
+        scene.add(ambientLight);
+
+        // 添加方向光
+        var directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+        directionalLight.position.set(1, 1, 1).normalize();
+        scene.add(directionalLight);
+
+        var loader = new THREE.STLLoader();
+        loader.load('cemian.STL', function (geometry) {
+            var material = new THREE.MeshPhysicalMaterial({
+                color: '#00A5E1',
+                metalness: 0.2,
+                roughness: 0.2,
+                clearcoat: 0.3, // 清漆强度，范围 0 - 1
+                clearcoatRoughness: 0.5 // 清漆粗糙度，范围 0 - 1
+            });
+            var mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            // 计算模型的包围盒
+            var boundingBox = new THREE.Box3().setFromObject(mesh);
+            var center = boundingBox.getCenter(new THREE.Vector3());
+            var size = boundingBox.getSize(new THREE.Vector3());
+            
+            // 设置新的中心点
+            var newCenter = new THREE.Vector3(-300, 400, 400); // 例如，将中心点设置为(0, 0, 0)
+            mesh.position.sub(center).add(newCenter); // 将模型中心移动到新的中心点
+
+            // 调整模型位置和缩放
+            
+            var maxDim = Math.max(size.x, size.y, size.z);
+            var scale = Math.min(container.clientWidth, container.clientHeight) / maxDim;
+            mesh.scale.set(scale, scale, scale);
+            
+            // 设置模型的初始旋转 
+            mesh.rotation.x = -Math.PI/2; // 例如，将模型绕X轴旋转90度
+            mesh.rotation.y = Math.PI ; // 例如，将模型绕Y轴旋转45度 
+            mesh.rotation.z = Math.PI / 2; // 例如，将模型绕Z轴旋转30度
+
+            // 调整相机位置
+            camera.position.set(0, 0, maxDim * 1.5);
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        });
+ 
+        var animate = function () {
+            requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        };
+
+        animate();
+    });
+</script>
+
+</html>
